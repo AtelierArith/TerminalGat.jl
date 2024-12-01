@@ -1,8 +1,8 @@
-# TerminalGat [![Build Status](https://github.com/terasakisatoshi/TerminalGat.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/terasakisatoshi/TerminalGat.jl/actions/workflows/CI.yml?query=branch%3Amain) [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://terasakisatoshi.github.io/TerminalGat.jl/stable/) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://terasakisatoshi.github.io/TerminalGat.jl/dev/)
+# [TerminalGat](https://github.com/AtelierArith/TerminalGat.jl) [![Build Status](https://github.com/AtelierArith/TerminalGat.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AtelierArith/TerminalGat.jl/actions/workflows/CI.yml?query=branch%3Amain) [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://AtelierArith.github.io/TerminalGat.jl/stable/) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://AtelierArith.github.io/TerminalGat.jl/dev/)
 
 ## Description
 
-Unofficial Julia interface for [`gat`](https://github.com/koki-develop/gat)
+This package [TerminalGat.jl](https://github.com/AtelierArith/TerminalGat.jl) provides Julia interface for [`gat`](https://github.com/koki-develop/gat). It allows to display files and images in the Julia's REPL.
 
 ## Setup
 

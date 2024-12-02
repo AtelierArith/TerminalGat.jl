@@ -136,7 +136,7 @@ function gode(args...)
     open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", io) do f
         println(f, str)
     end
-    (String(take!(io))) |> pager
+    print(String(take!(io)))
 end
 
 """

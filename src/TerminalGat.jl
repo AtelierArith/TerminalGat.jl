@@ -1,5 +1,6 @@
 module TerminalGat
 
+using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: Markdown
 
 using gat_jll: gat_jll
@@ -77,6 +78,27 @@ function gess(filename::AbstractString)
         gat(filename)
     end
     c.output |> pager
+end
+
+function gess(filename::AbstractString, line::Integer)
+    lines = open(filename, "r") do f
+        for _ in 1:line-1
+            readline(f)
+        end
+        lines = readlines(f)
+    end
+    str = join(lines, "\n")
+    io = IOBuffer()
+    open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", io) do f
+        println(f, str)
+    end
+    (String(take!(io))) |> pager
+end
+
+gess(f, @nospecialize t)  = gess(functionloc(f,t)...)
+
+macro gess(ex0)
+    ex = gen_call_with_extracted_types(__module__, :gess, ex0)
 end
 
 """

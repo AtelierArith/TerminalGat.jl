@@ -4,7 +4,7 @@ using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: Markdown
 
 using gat_jll: gat_jll
-export gat, gess, @gess, @gode
+export gat, gess, @gess, @code, @gode
 
 using IOCapture: IOCapture
 using TerminalPager: pager
@@ -140,6 +140,18 @@ function gode(args...)
 end
 
 """
+    gode(Function, types)
+
+Print the definition of a function
+"""
+function code(args...)
+    file, linenum = functionloc(args...)
+    lines = readlines(file)[linenum:end]
+    str = extractcode(lines)
+    print(str)
+end
+
+"""
     @gode(ex0)
 
 Applied to a function or macro call, it evaluates the arguments to the specified call, and returns code giving the location for the method that would be called for those arguments. 
@@ -148,6 +160,17 @@ It calls out to the `gode` function.
 macro gode(ex0)
     ex = gen_call_with_extracted_types(__module__, :gode, ex0)
 end
+
+"""
+    @gode(ex0)
+
+Applied to a function or macro call, it evaluates the arguments to the specified call, and returns code giving the location for the method that would be called for those arguments. 
+It calls out to the `gode` function.
+"""
+macro code(ex0)
+    ex = gen_call_with_extracted_types(__module__, :code, ex0)
+end
+
 
 """
     gat(md::Markdown.MD)

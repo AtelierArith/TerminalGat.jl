@@ -1,7 +1,7 @@
 name = "TerminalGat"
 uuid = "a8322826-ec82-40fc-90aa-583bcb5172ca"
 authors = ["Satoshi Terasaki <terasakisatoshi.math@gmail.com> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 IOCapture = "b5f81e59-6552-4d32-b1f0-c071b021bf89"

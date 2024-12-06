@@ -1,9 +1,10 @@
 module TerminalGat
 
+using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: Markdown
 
 using gat_jll: gat_jll
-export gat, gess
+export gat, gess, @gess, @code, @gode
 
 using IOCapture: IOCapture
 using TerminalPager: pager
@@ -78,6 +79,98 @@ function gess(filename::AbstractString)
     end
     c.output |> pager
 end
+
+function gess(filename::AbstractString, line::Integer)
+    lines = open(filename, "r") do f
+        for _ in 1:line-1
+            readline(f)
+        end
+        lines = readlines(f)
+    end
+    str = join(lines, "\n")
+    io = IOBuffer()
+    open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", io) do f
+        println(f, str)
+    end
+    (String(take!(io))) |> pager
+end
+
+gess(f, @nospecialize t)  = gess(functionloc(f,t)...)
+
+macro gess(ex0)
+    ex = gen_call_with_extracted_types(__module__, :gess, ex0)
+end
+
+"""
+    extractcode(lines::Vector{String})
+
+Extract code that reporensents the definition of a function from `lines`, scanning
+`lines` line by line using `Meta.parse`.
+"""
+function extractcode(lines::Vector{String})
+    r = -1
+    for n in eachindex(lines)
+        try
+            expr = Meta.parse(join(lines[1:n], "\n"), raise = true)
+            if expr.head !== :incomplete
+                r = n
+                break
+            end
+        catch e
+            e isa Meta.ParseError && continue
+        end
+    end
+    join(lines[begin:r], "\n")
+end
+
+"""
+    gode(Function, types)
+
+Print the definition of a function
+"""
+function gode(args...)
+    file, linenum = functionloc(args...)
+    lines = readlines(file)[linenum:end]
+    str = extractcode(lines)
+    io = IOBuffer()
+    open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", io) do f
+        println(f, str)
+    end
+    print(String(take!(io)))
+end
+
+"""
+    gode(Function, types)
+
+Print the definition of a function
+"""
+function code(args...)
+    file, linenum = functionloc(args...)
+    lines = readlines(file)[linenum:end]
+    str = extractcode(lines)
+    print(str)
+end
+
+"""
+    @gode(ex0)
+
+Applied to a function or macro call, it evaluates the arguments to the specified call, and returns code giving the location for the method that would be called for those arguments. 
+It calls out to the `gode` function.
+"""
+macro gode(ex0)
+    ex = gen_call_with_extracted_types(__module__, :gode, ex0)
+end
+
+"""
+    @gode(ex0)
+
+Applied to a function or macro call, it evaluates the arguments to the specified call, and returns code giving the location for the method that would be called for those arguments. 
+It calls out to the `gode` function.
+"""
+macro code(ex0)
+    ex = gen_call_with_extracted_types(__module__, :code, ex0)
+end
+
 
 """
     gat(md::Markdown.MD)

@@ -24,7 +24,13 @@ julia> using Pkg; Pkg.add("TerminalGat")
 
 ## How to use
 
-Our Julia package `TerminalGat.jl` exports `gat`, and `gess` functions.
+Our Julia package `TerminalGat.jl` exports 
+
+- `gat`
+- `gess`
+- `@gess`
+- `@code`
+- `@gode`
 
 ### `gat`
 
@@ -53,3 +59,15 @@ julia> gess("Project.toml")
 ```
 
 Internally, our package uses [`ronisbr/TerminalPager.jl`](https://github.com/ronisbr/TerminalPager.jl) to scroll through content that does not fit in the screen.
+
+### `@gess`, `@code`, `@gode`
+
+The `@gess` macro works like `InteractiveUtils.@less`, but highlights Julia code.
+
+<img width="864" alt="image" src="https://github.com/user-attachments/assets/956925ae-ace7-4e53-8b93-3ca3b08d22f1">
+
+The `@code' extracts a method definition from the source code that defines the method.
+
+The `@gode` macro works like `@code`, but highlights Julia code.
+
+<img width="552" alt="image" src="https://github.com/user-attachments/assets/a261fd09-30a0-4f14-84e3-ab9db1eae7fb">

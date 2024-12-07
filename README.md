@@ -24,6 +24,8 @@ julia> using Pkg; Pkg.add("TerminalGat")
 
 ## How to use
 
+https://github.com/user-attachments/assets/6c251619-7669-4170-afe0-dbb699f39390
+
 Our Julia package `TerminalGat.jl` exports 
 
 - `gat`

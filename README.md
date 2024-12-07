@@ -66,7 +66,7 @@ The `@gess` macro works like `InteractiveUtils.@less`, but highlights Julia code
 
 <img width="864" alt="image" src="https://github.com/user-attachments/assets/956925ae-ace7-4e53-8b93-3ca3b08d22f1">
 
-The `@code' extracts a method definition from the source code that defines the method.
+The `@code` extracts a method definition from the source code that defines the method.
 
 The `@gode` macro works like `@code`, but highlights Julia code.
 

@@ -54,14 +54,20 @@ julia> gat(@doc sin)
 """
 function gat(md::Markdown.MD)
     str = sprint(show, MIME"text/plain"(), md, context=:color => false)
-    io = IOBuffer()
-    open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", io) do f
-        println(f, str)
+    buf = IOBuffer()
+    open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", buf) do tmp
+        println(tmp, str)
     end
     # If docstring contains an example about REPL session, we color `julia` as red `38;5;197m` that is used in the original `gat` command.
-    colored_text = replace(String(take!(io)), "julia" => "\033[38;5;197mjulia\033[0m")
+    colored_text = String(take!(buf))
+    # gat(@doc TerminalGat)
+    colored_text = replace(colored_text, "julia>" => "\033[38;5;197mjulia>\033[0m")
+    # gat(@doc sin)
+    colored_text = replace(colored_text, "julia\e[0m\e[38;5;197m>\e[0m" => "\033[38;5;197mjulia>\033[0m")
+    display(colored_text)
     print(colored_text)
 end
+
 
 """
     gess(filename::AbstractString)

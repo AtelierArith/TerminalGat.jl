@@ -64,7 +64,7 @@ function gat(md::Markdown.MD)
     colored_text = replace(colored_text, "julia>" => "\033[38;5;197mjulia>\033[0m")
     # gat(@doc sin)
     colored_text = replace(colored_text, "julia\e[0m\e[38;5;197m>\e[0m" => "\033[38;5;197mjulia>\033[0m")
-    display(colored_text)
+    # display(colored_text) <-- use for debugging.
     print(colored_text)
 end
 

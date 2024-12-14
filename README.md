@@ -1,5 +1,9 @@
 # [TerminalGat](https://github.com/AtelierArith/TerminalGat.jl) [![Build Status](https://github.com/AtelierArith/TerminalGat.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AtelierArith/TerminalGat.jl/actions/workflows/CI.yml?query=branch%3Amain) [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://AtelierArith.github.io/TerminalGat.jl/stable/) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://AtelierArith.github.io/TerminalGat.jl/dev/)
 
+## TL;DR
+
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=16&duration=1500&pause=200&color=10F748&multiline=true&width=700&height=200&lines=julia%3E+%23+How+to+use;julia%3E+using+TerminalGat;julia%3E+gat(%22main.jl%22)+;julia%3E+gess(%22main.jl%22)+%23+gat+%2B+less;julia%3E+%40less+%40show+x+%23+InteractiveUtils.jl;julia%3E+%40gess+%40show+x+%23+gat+%2B+%40less;julia%3E+%40code+%40show+x;julia%3E+%40gode+%40show+x+%23+gat+%2B+%40code)](https://git.io/typing-svg)
+
 ## Description
 
 This package [TerminalGat.jl](https://github.com/AtelierArith/TerminalGat.jl) provides Julia interface for [`gat`](https://github.com/koki-develop/gat). It allows to display files and images in the Julia's REPL.
@@ -26,7 +30,7 @@ julia> using Pkg; Pkg.add("TerminalGat")
 
 https://github.com/user-attachments/assets/6c251619-7669-4170-afe0-dbb699f39390
 
-Our Julia package `TerminalGat.jl` exports 
+Our Julia package `TerminalGat.jl` exports
 
 - `gat`
 - `gess`

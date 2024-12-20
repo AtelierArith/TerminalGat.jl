@@ -224,8 +224,7 @@ function search(io::IO, args...)
         file, ln = (Base.find_source_file(expanduser(string(file))), ln)
         lines = readlines(file)[ln:end]
         str = extractcode(lines)
-        colored_str = colorize_by_gat(str)
-        print(io, colored_str)
+        print(io, str)
     end
 end
 
@@ -244,7 +243,8 @@ function gearch(io::IO, args...)
         file, ln = (Base.find_source_file(expanduser(string(file))), ln)
         lines = readlines(file)[ln:end]
         str = extractcode(lines)
-        print(io, str)
+        colored_str = colorize_by_gat(str)
+        print(io, colored_str)
     end
 end
 

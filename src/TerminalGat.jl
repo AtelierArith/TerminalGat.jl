@@ -60,15 +60,21 @@ function gat(md::Markdown.MD)
     # gat(@doc TerminalGat) reads README.md which may contain a Julia prompt `julia>`
     colored_text = replace(colored_text, "julia>" => "\033[38;5;197mjulia>\033[0m")
     # gat(@doc sin) reads Markdown which may contain highlighted Julia prompt "julia\e[0m\e[38;5;197m>\e[0m"
-    colored_text = replace(colored_text, "julia\e[0m\e[38;5;197m>\e[0m" => "\033[38;5;197mjulia>\033[0m")
+    colored_text = replace(
+        colored_text,
+        "julia\e[0m\e[38;5;197m>\e[0m" => "\033[38;5;197mjulia>\033[0m",
+    )
     # display(colored_text) # <-- use for debugging.
     print(colored_text)
 end
 
-
 function colorize_by_gat(str::AbstractString)
     buf = IOBuffer()
-    open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", buf) do tmp
+    open(
+        pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`),
+        "w",
+        buf,
+    ) do tmp
         println(tmp, str)
     end
     String(take!(buf))
@@ -84,7 +90,7 @@ function extractcode(lines::Vector{String})
     r = -1
     for n in eachindex(lines)
         try
-            expr = Meta.parse(join(lines[1:n], "\n"), raise = true)
+            expr = Meta.parse(join(lines[1:n], "\n"), raise=true)
             if expr.head !== :incomplete
                 r = n
                 break
@@ -124,7 +130,7 @@ function gess(filename::AbstractString, line::Integer)
     colorize_by_gat(str) |> pager
 end
 
-gess(f, @nospecialize t)  = gess(functionloc(f,t)...)
+gess(f, @nospecialize t) = gess(functionloc(f, t)...)
 
 macro gess(ex0)
     ex = gen_call_with_extracted_types(__module__, :gess, ex0)
@@ -177,7 +183,6 @@ macro code(ex0)
     ex = gen_call_with_extracted_types(__module__, :code, ex0)
 end
 
-
 """
     gat(md::Markdown.MD)
 
@@ -221,7 +226,7 @@ end
 search(args...) = (@nospecialize; search(stdout, args...))
 
 function search(@nospecialize(f),
-                 mod::Union{Module,AbstractArray{Module},Nothing}=nothing)
+    mod::Union{Module,AbstractArray{Module},Nothing}=nothing)
     # return all matches
     return search(f, Tuple{Vararg{Any}}, mod)
 end

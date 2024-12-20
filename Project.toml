@@ -1,11 +1,12 @@
 name = "TerminalGat"
 uuid = "a8322826-ec82-40fc-90aa-583bcb5172ca"
 authors = ["Satoshi Terasaki <terasakisatoshi.math@gmail.com> and contributors"]
-version = "0.1.3"
+version = "0.1.4"
 
 [deps]
 IOCapture = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
 InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
+JLFzf = "1019f520-868f-41f5-a6de-eb00f4b6a39c"
 Markdown = "d6f4376e-aef5-505a-96c1-9c027394607a"
 TerminalPager = "0c614874-6106-40ed-a7c2-2f1cd0bff883"
 gat_jll = "b88765aa-e0a2-5b02-b897-840ea4e6307e"
@@ -15,6 +16,7 @@ Aqua = "0.8.9"
 IOCapture = "0.2"
 InteractiveUtils = "1"
 JET = "0.9.12"
+JLFzf = "0.1.9"
 Markdown = "1"
 TerminalPager = "0.5, 0.6"
 Test = "1"

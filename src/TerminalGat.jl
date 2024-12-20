@@ -4,8 +4,9 @@ using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: Markdown
 
 using gat_jll: gat_jll
-export gat, gess, @gess, @code, @gode
+export gat, gess, @gess, @code, @gode, @search
 
+using JLFzf: inter_fzf
 using IOCapture: IOCapture
 using TerminalPager: pager
 
@@ -193,6 +194,9 @@ function gess(md::Markdown.MD)
     c.output |> pager
 end
 
+########
+# search
+########
 
 function search(io::IO, args...)
     ms = methods(args...)
@@ -213,4 +217,27 @@ function search(io::IO, args...)
         print(io, colored_str)
     end
 end
+
+search(args...) = (@nospecialize; search(stdout, args...))
+
+function search(@nospecialize(f),
+                 mod::Union{Module,AbstractArray{Module},Nothing}=nothing)
+    # return all matches
+    return search(f, Tuple{Vararg{Any}}, mod)
+end
+
+macro search(fn::Symbol)
+    :(search($(esc(fn))))
+end
+
+"""
+    @search f [mod]
+
+It works like `method(f, [mod::Module])` with fizzy finder feature. 
+Then print a code giving the method definition of f user specified.
+"""
+macro search(fn::Symbol, mod::Symbol)
+    :(search($(esc(fn)), $(esc(mod))))
+end
+
 end # module

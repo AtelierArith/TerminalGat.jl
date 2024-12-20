@@ -1,4 +1,4 @@
-# [TerminalGat](https://github.com/AtelierArith/TerminalGat.jl) [![Build Status](https://github.com/AtelierArith/TerminalGat.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AtelierArith/TerminalGat.jl/actions/workflows/CI.yml?query=branch%3Amain) [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://AtelierArith.github.io/TerminalGat.jl/stable/) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://AtelierArith.github.io/TerminalGat.jl/dev/)
+# [TerminalGat](https://github.com/AtelierArith/TerminalGat.jl) [![Build Status](https://github.com/AtelierArith/TerminalGat.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/AtelierArith/TerminalGat.jl/actions/workflows/CI.yml?query=branch%3Amain) [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://AtelierArith.github.io/TerminalGat.jl/stable/) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://AtelierArith.github.io/TerminalGat.jl/dev/) [![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl)
 
 ## TL;DR
 
@@ -37,6 +37,8 @@ Our Julia package `TerminalGat.jl` exports
 - `@gess`
 - `@code`
 - `@gode`
+- `@search`
+- `@gearch`
 
 ### `gat`
 
@@ -77,3 +79,9 @@ The `@code` extracts a method definition from the source code that defines the m
 The `@gode` macro works like `@code`, but highlights Julia code.
 
 <img width="552" alt="image" src="https://github.com/user-attachments/assets/a261fd09-30a0-4f14-84e3-ab9db1eae7fb">
+
+### `@search`, `@gearch`
+
+The `@search` works like [tkf/InteractiveCodeSearch.jl](https://github.com/tkf/InteractiveCodeSearch.jl) allowing us to choose the code we want to read.
+
+The `@gearch` macro works `@seach` with `gat` feature; allowing us to read syntax highlighted code by gat.

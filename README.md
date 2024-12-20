@@ -85,3 +85,5 @@ The `@gode` macro works like `@code`, but highlights Julia code.
 The `@search` works like [tkf/InteractiveCodeSearch.jl](https://github.com/tkf/InteractiveCodeSearch.jl) allowing us to choose the code we want to read.
 
 The `@gearch` macro works `@seach` with `gat` feature; allowing us to read syntax highlighted code by gat.
+
+https://github.com/user-attachments/assets/fef6b270-1ec3-4a04-a3a8-9213cb4883ee

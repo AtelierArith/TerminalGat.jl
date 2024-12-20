@@ -54,20 +54,46 @@ julia> gat(@doc sin)
 """
 function gat(md::Markdown.MD)
     str = sprint(show, MIME"text/plain"(), md, context=:color => false)
+    colored_text = colorize_by_gat(str)
+    # If docstring contains an example about REPL session, we color `julia` as red `38;5;197m` that is used in the original `gat` command.
+    # gat(@doc TerminalGat) reads README.md which may contain a Julia prompt `julia>`
+    colored_text = replace(colored_text, "julia>" => "\033[38;5;197mjulia>\033[0m")
+    # gat(@doc sin) reads Markdown which may contain highlighted Julia prompt "julia\e[0m\e[38;5;197m>\e[0m"
+    colored_text = replace(colored_text, "julia\e[0m\e[38;5;197m>\e[0m" => "\033[38;5;197mjulia>\033[0m")
+    # display(colored_text) # <-- use for debugging.
+    print(colored_text)
+end
+
+
+function colorize_by_gat(str::AbstractString)
     buf = IOBuffer()
     open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", buf) do tmp
         println(tmp, str)
     end
-    # If docstring contains an example about REPL session, we color `julia` as red `38;5;197m` that is used in the original `gat` command.
-    colored_text = String(take!(buf))
-    # gat(@doc TerminalGat)
-    colored_text = replace(colored_text, "julia>" => "\033[38;5;197mjulia>\033[0m")
-    # gat(@doc sin)
-    colored_text = replace(colored_text, "julia\e[0m\e[38;5;197m>\e[0m" => "\033[38;5;197mjulia>\033[0m")
-    # display(colored_text) <-- use for debugging.
-    print(colored_text)
+    String(take!(buf))
 end
 
+"""
+    extractcode(lines::Vector{String})
+
+Extract code that reporensents the definition of a function from `lines`, scanning
+`lines` line by line using `Meta.parse`.
+"""
+function extractcode(lines::Vector{String})
+    r = -1
+    for n in eachindex(lines)
+        try
+            expr = Meta.parse(join(lines[1:n], "\n"), raise = true)
+            if expr.head !== :incomplete
+                r = n
+                break
+            end
+        catch e
+            e isa Meta.ParseError && continue
+        end
+    end
+    join(lines[begin:r], "\n")
+end
 
 """
     gess(filename::AbstractString)
@@ -94,11 +120,7 @@ function gess(filename::AbstractString, line::Integer)
         lines = readlines(f)
     end
     str = join(lines, "\n")
-    io = IOBuffer()
-    open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", io) do f
-        println(f, str)
-    end
-    (String(take!(io))) |> pager
+    colorize_by_gat(str) |> pager
 end
 
 gess(f, @nospecialize t)  = gess(functionloc(f,t)...)
@@ -108,54 +130,31 @@ macro gess(ex0)
 end
 
 """
-    extractcode(lines::Vector{String})
+    gode(io::IO, f, types)
 
-Extract code that reporensents the definition of a function from `lines`, scanning
-`lines` line by line using `Meta.parse`.
-"""
-function extractcode(lines::Vector{String})
-    r = -1
-    for n in eachindex(lines)
-        try
-            expr = Meta.parse(join(lines[1:n], "\n"), raise = true)
-            if expr.head !== :incomplete
-                r = n
-                break
-            end
-        catch e
-            e isa Meta.ParseError && continue
-        end
-    end
-    join(lines[begin:r], "\n")
-end
-
-"""
-    gode(Function, types)
-
-Print the definition of a function
+Print a code giving the location of a generic Function definition
+with syntax highlighting by gat command.
 """
 function gode(args...)
     file, linenum = functionloc(args...)
     lines = readlines(file)[linenum:end]
     str = extractcode(lines)
-    io = IOBuffer()
-    open(pipeline(`$(gat_jll.gat()) --theme monokai --force-color --lang julia`), "w", io) do f
-        println(f, str)
-    end
-    print(String(take!(io)))
+    print(io, colorize_by_gat(str))
 end
 
 """
-    gode(Function, types)
+    gode([io::IO], f, types)
 
-Print the definition of a function
+Print a code giving the location of a generic Function definition.
 """
-function code(args...)
-    file, linenum = functionloc(args...)
-    lines = readlines(file)[linenum:end]
+function code(io::IO, args...)
+    file, ln = functionloc(args...)
+    lines = readlines(file)[ln:end]
     str = extractcode(lines)
-    print(str)
+    print(io, str)
 end
+
+code(args...) = (@nospecialize; code(stdout, args...))
 
 """
     @gode(ex0)
@@ -194,4 +193,24 @@ function gess(md::Markdown.MD)
     c.output |> pager
 end
 
+
+function search(io::IO, args...)
+    ms = methods(args...)
+    x = inter_fzf(ms, "--read0")
+    if isempty(x)
+        error("could not determine location of method definition")
+    end
+    file_line = last(split(x))
+    file, ln_str = split(file_line, ":")
+    ln = Base.parse(Int, ln_str)
+    if ln <= 0 || isempty(x)
+        error("could not determine location of method definition")
+    else
+        file, ln = (Base.find_source_file(expanduser(string(file))), ln)
+        lines = readlines(file)[ln:end]
+        str = extractcode(lines)
+        colored_str = colorize_by_gat(str)
+        print(io, colored_str)
+    end
+end
 end # module

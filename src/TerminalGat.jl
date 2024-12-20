@@ -4,7 +4,7 @@ using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: Markdown
 
 using gat_jll: gat_jll
-export gat, gess, @gess, @code, @gode, @search
+export gat, gess, @gess, @code, @gode, @search, @gearch
 
 using JLFzf: inter_fzf
 using IOCapture: IOCapture
@@ -136,6 +136,11 @@ macro gess(ex0)
     ex = gen_call_with_extracted_types(__module__, :gess, ex0)
 end
 
+###
+# code and gode
+# @code and @gode
+###
+
 """
     gode(io::IO, f, types)
 
@@ -177,7 +182,7 @@ end
     @gode(ex0)
 
 Applied to a function or macro call, it evaluates the arguments to the specified call, and returns code giving the location for the method that would be called for those arguments. 
-It calls out to the `gode` function.
+It calls out to the `code` function.
 """
 macro code(ex0)
     ex = gen_call_with_extracted_types(__module__, :code, ex0)
@@ -200,7 +205,8 @@ function gess(md::Markdown.MD)
 end
 
 ########
-# search
+# search and gearch
+# @search and @gearch
 ########
 
 function search(io::IO, args...)
@@ -223,6 +229,25 @@ function search(io::IO, args...)
     end
 end
 
+function gearch(io::IO, args...)
+    ms = methods(args...)
+    x = inter_fzf(ms, "--read0")
+    if isempty(x)
+        error("could not determine location of method definition")
+    end
+    file_line = last(split(x))
+    file, ln_str = split(file_line, ":")
+    ln = Base.parse(Int, ln_str)
+    if ln <= 0 || isempty(x)
+        error("could not determine location of method definition")
+    else
+        file, ln = (Base.find_source_file(expanduser(string(file))), ln)
+        lines = readlines(file)[ln:end]
+        str = extractcode(lines)
+        print(io, str)
+    end
+end
+
 search(args...) = (@nospecialize; search(stdout, args...))
 
 function search(@nospecialize(f),
@@ -231,18 +256,40 @@ function search(@nospecialize(f),
     return search(f, Tuple{Vararg{Any}}, mod)
 end
 
+gearch(args...) = (@nospecialize; gearch(stdout, args...))
+
+function gearch(@nospecialize(f),
+    mod::Union{Module,AbstractArray{Module},Nothing}=nothing)
+    # return all matches
+    return gearch(f, Tuple{Vararg{Any}}, mod)
+end
+
 macro search(fn::Symbol)
     :(search($(esc(fn))))
+end
+
+macro gearch(fn::Symbol)
+    :(gearch($(esc(fn))))
 end
 
 """
     @search f [mod]
 
-It works like `method(f, [mod::Module])` with fizzy finder feature. 
-Then print a code giving the method definition of f user specified.
+It works like `method(f, [mod::Module])` with the Fizzy Finder feature. 
+Then print a code that gives the method definition of f specified by the user.
 """
 macro search(fn::Symbol, mod::Symbol)
     :(search($(esc(fn)), $(esc(mod))))
+end
+
+"""
+    @gearch f [mod]
+
+It works like `method(f, [mod::Module])` with the Fizzy Finder feature. 
+Then print a highlighted code that gives the method definition of f specified by the user.
+"""
+macro gearch(fn::Symbol, mod::Symbol)
+    :(gearch($(esc(fn)), $(esc(mod))))
 end
 
 end # module

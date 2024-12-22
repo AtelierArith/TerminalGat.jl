@@ -147,7 +147,7 @@ end
 Print a code giving the location of a generic Function definition
 with syntax highlighting by gat command.
 """
-function gode(args...)
+function gode(io::IO, args...)
     file, linenum = functionloc(args...)
     lines = readlines(file)[linenum:end]
     str = extractcode(lines)
@@ -167,6 +167,7 @@ function code(io::IO, args...)
 end
 
 code(args...) = (@nospecialize; code(stdout, args...))
+gode(args...) = (@nospecialize; gode(stdout, args...))
 
 """
     @gode(ex0)

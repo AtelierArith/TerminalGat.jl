@@ -276,7 +276,7 @@ end
 """
     @search f [mod]
 
-It works like `method(f, [mod::Module])` with the Fizzy Finder feature. 
+It works like `methods(f, [mod::Module])` with the Fizzy Finder feature. 
 Then print a code that gives the method definition of f specified by the user.
 """
 macro search(fn::Symbol, mod::Symbol)
@@ -286,7 +286,7 @@ end
 """
     @gearch f [mod]
 
-It works like `method(f, [mod::Module])` with the Fizzy Finder feature. 
+It works like `methods(f, [mod::Module])` with the Fizzy Finder feature. 
 Then print a highlighted code that gives the method definition of f specified by the user.
 """
 macro gearch(fn::Symbol, mod::Symbol)

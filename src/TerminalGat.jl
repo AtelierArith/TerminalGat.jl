@@ -265,22 +265,14 @@ function gearch(@nospecialize(f),
     return gearch(f, Tuple{Vararg{Any}}, mod)
 end
 
-macro search(fn::Symbol)
-    :(search($(esc(fn))))
-end
-
-macro gearch(fn::Symbol)
-    :(gearch($(esc(fn))))
-end
-
 """
     @search f [mod]
 
 It works like `methods(f, [mod::Module])` with the Fizzy Finder feature. 
 Then print a code that gives the method definition of f specified by the user.
 """
-macro search(fn::Symbol, mod::Symbol)
-    :(search($(esc(fn)), $(esc(mod))))
+macro search(fn)
+    :(search($(esc(fn))))
 end
 
 """
@@ -289,8 +281,8 @@ end
 It works like `methods(f, [mod::Module])` with the Fizzy Finder feature. 
 Then print a highlighted code that gives the method definition of f specified by the user.
 """
-macro gearch(fn::Symbol, mod::Symbol)
-    :(gearch($(esc(fn)), $(esc(mod))))
+macro gearch(fn)
+    :(gearch($(esc(fn))))
 end
 
 end # module

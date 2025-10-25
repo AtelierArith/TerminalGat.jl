@@ -13,7 +13,7 @@ gat_jll = "b88765aa-e0a2-5b02-b897-840ea4e6307e"
 
 [compat]
 Aqua = "0.8.9"
-IOCapture = "0.2"
+IOCapture = "0.2, 1"
 InteractiveUtils = "1"
 JET = "0.9.12"
 JLFzf = "0.1.9"

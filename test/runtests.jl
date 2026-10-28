@@ -9,5 +9,5 @@ using JET
 end
 
 @testset "JET" begin
-    JET.report_package(TerminalGat, target_defined_modules=true)
+    JET.report_package(TerminalGat, target_modules=(TerminalGat,))
 end

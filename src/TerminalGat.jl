@@ -10,6 +10,8 @@ using JLFzf: inter_fzf
 using IOCapture: IOCapture
 using TerminalPager: pager
 
+include("patch.jl")
+
 """
     gat(filename::AbstractString)
 
@@ -120,14 +122,7 @@ function gess(filename::AbstractString)
 end
 
 function gess(filename::AbstractString, line::Integer)
-    lines = open(filename, "r") do f
-        for _ in 1:line-1
-            readline(f)
-        end
-        lines = readlines(f)
-    end
-    str = join(lines, "\n")
-    colorize_by_gat(str) |> pager
+    source_pager(colorize_by_gat(read(filename, String)), line)
 end
 
 gess(f, @nospecialize t) = gess(functionloc(f, t)...)
@@ -251,6 +246,9 @@ end
 
 search(args...) = (@nospecialize; search(stdout, args...))
 
+search(::IO, ::Union{Module,AbstractArray{Module},Nothing}) =
+    throw(ArgumentError("a function to search is required after the output stream"))
+
 function search(@nospecialize(f),
     mod::Union{Module,AbstractArray{Module},Nothing}=nothing)
     # return all matches
@@ -258,6 +256,9 @@ function search(@nospecialize(f),
 end
 
 gearch(args...) = (@nospecialize; gearch(stdout, args...))
+
+gearch(::IO, ::Union{Module,AbstractArray{Module},Nothing}) =
+    throw(ArgumentError("a function to search is required after the output stream"))
 
 function gearch(@nospecialize(f),
     mod::Union{Module,AbstractArray{Module},Nothing}=nothing)

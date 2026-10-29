@@ -1,6 +1,6 @@
 name = "TerminalGat"
 uuid = "a8322826-ec82-40fc-90aa-583bcb5172ca"
-version = "0.1.8"
+version = "0.2.0"
 authors = ["Satoshi Terasaki <terasakisatoshi.math@gmail.com> and contributors"]
 
 [deps]
